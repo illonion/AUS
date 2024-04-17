@@ -140,5 +140,49 @@ socket.onmessage = async (event) => {
             scoreDifferenceLeftEl.style.display = "none"
             scoreDifferenceRightEl.style.display = "inline"
         }
+    } else if (chatLength !== data.tourney.manager.chat.length) {
+        // Chat stuff
+        // This is also mostly taken from Victim Crasher: https://github.com/VictimCrasher/static/tree/master/WaveTournament
+        (chatLength === 0 || chatLength > data.tourney.manager.chat.length) ? (chatDisplay.innerHTML = "", chatLength = 0) : null;
+        const fragment = document.createDocumentFragment()
+
+        for (let i = chatLength; i < data.tourney.manager.chat.length; i++) {
+            const chatColour = data.tourney.manager.chat[i].team
+
+            // Chat message container
+            const chatMessageContainer = document.createElement("div")
+            chatMessageContainer.classList.add("chatMessageContainer")
+
+            // Time
+            const chatMessageTime = document.createElement("div")
+            chatMessageTime.classList.add("chatMessageTime")
+            chatMessageTime.innerText = data.tourney.manager.chat[i].time
+
+            // Whole Message
+            const chatMessageContent = document.createElement("div")
+            chatMessageContent.classList.add("chatMessageContent")  
+            
+            // Name
+            const chatMessageName = document.createElement("div")
+            chatMessageName.classList.add(chatColour)
+            chatMessageName.innerText = data.tourney.manager.chat[i].name + ": "
+
+            // Message
+            const chatMessageText = document.createElement("div")
+            chatMessageText.classList.add("chatMessageText")
+            chatMessageText.innerText = data.tourney.manager.chat[i].messageBody
+
+            chatMessageContent.append(chatMessageName, chatMessageText)
+            chatMessageContainer.append(chatMessageTime, chatMessageContent)
+            fragment.append(chatMessageContainer)
+        }
+
+        chatDisplay.append(fragment)
+        chatLength = data.tourney.manager.chat.length
+        chatDisplay.scrollTo({
+            top: chatDisplay.scrollHeight,
+            behavior: 'smooth'
+        })
     }
+    
 }
