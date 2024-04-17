@@ -66,3 +66,31 @@
     left: 50%;
     background-color: var(--mainBlue);
 }
+
+/* --- Scores --- */
+.score {
+    position: absolute; top: 960px;
+    width: 300px; height: 60px;
+    line-height: 60px;
+    font-weight: 900;
+    font-size: 40px;
+    text-align: center;
+}
+#redScore {
+    left: 540px; 
+    background-color: var(--mainRed);
+}
+#blueScore {
+    right: 540px;
+    background-color: var(--mainBlue);
+}
+#scoreDifference {
+    position: absolute; left: 50%; top: 965px;
+    transform: translateX(-50%);
+    width: 200px; height: 50px;
+    line-height: 50px;
+    font-weight: 900;
+    font-size: 25px;
+    text-align: center;
+    background-color: white;
+}
