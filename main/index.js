@@ -15,6 +15,35 @@ const redTeamStarsEl = document.getElementById("redTeamStars")
 const blueTeamStarsEl = document.getElementById("blueTeamStars")
 let currentBestOf, currentRedStars, currentBlueStars
 
+// Score Visibility
+let isScoreVisible
+
+// Moving score bar
+const redTeamMovingScoreBarEl = document.getElementById("redTeamMovingScoreBar")
+const blueTeamMovingScoreBarEl = document.getElementById("blueTeamMovingScoreBar")
+
+// Scores
+const redScoreEl = document.getElementById("redScore")
+const blueScoreEl = document.getElementById("blueScore")
+const scoreDifferenceEl = document.getElementById("scoreDifference")
+
+// Score difference
+const scoreDifferenceLeftEl = document.getElementById("scoreDifferenceLeft")
+const scoreDifferenceNumberEl = document.getElementById("scoreDifferenceNumber")
+const scoreDifferenceRightEl = document.getElementById("scoreDifferenceRight")
+let currentScoreRed, currentScoreBlue, currentScoreDifference
+
+// Chat
+const chatDisplay = document.getElementById("chatDisplay")
+let chatLength = 0
+
+// Score animation
+let scoreAnimation = {
+    redScore: new CountUp(redScoreEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
+    blueScore: new CountUp(blueScoreEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
+    scoreDifferenceNumber: new CountUp(scoreDifferenceNumberEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." })
+}
+
 socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
     console.log(data)
@@ -54,6 +83,62 @@ socket.onmessage = async (event) => {
         for (let i = 0; i < currentFirstTo; i++) {
             redTeamStarsEl.append(createStars(currentRedStars, i))
             blueTeamStarsEl.append(createStars(currentBlueStars, i))
+        }
+    }
+
+    // Score visibility
+    if (isScoreVisible !== data.tourney.manager.bools.scoreVisible) {
+        isScoreVisible = data.tourney.manager.bools.scoreVisible
+
+        if (isScoreVisible) {
+            redTeamMovingScoreBarEl.style.opacity = 1
+            blueTeamMovingScoreBarEl.style.opacity = 1
+            redScoreEl.style.opacity = 1
+            blueScoreEl.style.opacity = 1
+            scoreDifferenceEl.style.opacity = 1
+            chatDisplay.style.opacity = 0
+        } else {
+            redTeamMovingScoreBarEl.style.opacity = 0
+            blueTeamMovingScoreBarEl.style.opacity = 0
+            redScoreEl.style.opacity = 0
+            blueScoreEl.style.opacity = 0
+            scoreDifferenceEl.style.opacity = 0
+            chatDisplay.style.opacity = 1
+        }
+    }
+
+    // Scores
+    if (isScoreVisible) {
+        // Setting scores
+        currentScoreRed = data.tourney.manager.gameplay.score.left
+        currentScoreBlue = data.tourney.manager.gameplay.score.right
+        currentScoreDifference = Math.abs(currentScoreRed - currentScoreBlue)
+
+        // Score animation
+        scoreAnimation.redScore.update(currentScoreRed)
+        scoreAnimation.blueScore.update(currentScoreBlue)
+        scoreAnimation.scoreDifferenceNumber.update(currentScoreDifference)
+
+        // Moving score bar width
+        const movingScoreBarDifferencePercent = Math.min(currentScoreDifference / 650000, 1)
+        let movingScoreBarRectangleWidth = Math.min(Math.pow(movingScoreBarDifferencePercent, 0.5) * 0.8 * 610, 610)
+
+        // Conditionals
+        if (currentScoreRed > currentScoreBlue) {
+            redTeamMovingScoreBarEl.style.width = `${movingScoreBarRectangleWidth}px`
+            blueTeamMovingScoreBarEl.style.width = 0
+            scoreDifferenceLeftEl.style.display = "inline"
+            scoreDifferenceRightEl.style.display = "none"
+        } else if (currentScoreRed === currentScoreBlue) {
+            redTeamMovingScoreBarEl.style.width = 0
+            blueTeamMovingScoreBarEl.style.width = 0
+            scoreDifferenceLeftEl.style.display = "none"
+            scoreDifferenceRightEl.style.display = "none"
+        } else if (currentScoreRed < currentScoreBlue) {
+            redTeamMovingScoreBarEl.style.width = 0
+            blueTeamMovingScoreBarEl.style.width = `${movingScoreBarRectangleWidth}px`
+            scoreDifferenceLeftEl.style.display = "none"
+            scoreDifferenceRightEl.style.display = "inline"
         }
     }
 }
