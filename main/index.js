@@ -28,6 +28,7 @@ const blueTeamStarsEl = document.getElementById("blueTeamStars")
 let currentBestOf, currentRedStars, currentBlueStars
 
 // Score Visibility
+const gameplayImageEl = document.getElementById("gameplayImage")
 let isScoreVisible
 
 // Moving score bar
@@ -115,6 +116,7 @@ socket.onmessage = async (event) => {
         isScoreVisible = data.tourney.manager.bools.scoreVisible
 
         if (isScoreVisible) {
+            gameplayImageEl.style.opacity = 1
             redTeamMovingScoreBarEl.style.opacity = 1
             blueTeamMovingScoreBarEl.style.opacity = 1
             redScoreEl.style.opacity = 1
@@ -122,6 +124,7 @@ socket.onmessage = async (event) => {
             scoreDifferenceEl.style.opacity = 1
             chatDisplay.style.opacity = 0
         } else {
+            gameplayImageEl.style.opacity = 0
             redTeamMovingScoreBarEl.style.opacity = 0
             blueTeamMovingScoreBarEl.style.opacity = 0
             redScoreEl.style.opacity = 0

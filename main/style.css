@@ -9,14 +9,21 @@
     --bottomSectionHeight: 173px;
 }
 
-/* Whole page */
-#main {
+/* Gameplay backgrounds */
+.wholePageCover {
     position: absolute; left: 0; top: 0;
-    font-family: "Urbanist", sans-serif;
     width: 1920px; height: 1080px;
     background-size: cover;
-    background-image: url("static/background.png")
 }
+#nonGameplayImage { background-image: url("static/non-gameplay.png") }
+#gameplayImage { 
+    background-image: url("static/gameplay.png");
+    transition: 500ms ease-in-out;
+    opacity: 1;
+}
+
+/* Whole page */
+body { font-family: "Urbanist", sans-serif; }
 
 /* --- Team Name --- */
 .teamName {
