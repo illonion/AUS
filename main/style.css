@@ -1,0 +1,5 @@
+#main {
+    position: absolute; left: 0; top: 0;
+    background-size: cover;
+    background-image: url("static/background.png")
+}
