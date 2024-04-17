@@ -1,8 +1,8 @@
 :root {
     --mainRed: rgb(255,160,159);
-    --mainBlue: rgb(184,195,255);
+    --mainBlue: rgb(184,223,255);
     --boxShadowRed: 0 4px 15px 0 rgba(255,160,159,0.8); 
-    --boxShadowBlue: 0 4px 15px 0 rgba(184,195,255,0.8); 
+    --boxShadowBlue: 0 4px 15px 0 rgba(184,223,255,0.8); 
 }
 
 #main {
@@ -49,4 +49,20 @@
 .teamStarFillBlue {
     background-color: var(--mainBlue);
     box-shadow: var(--boxShadowBlue);
+}
+
+/* --- Moving Score Bar --- */
+.movingScoreBar {
+    position: absolute; top: 907px; 
+    width: 200px; height: 30px;
+    transition: 500ms ease-in-out;
+
+}
+#redTeamMovingScoreBar {
+    right: 50%; 
+    background-color: var(--mainRed);
+}
+#blueTeamMovingScoreBar {
+    left: 50%;
+    background-color: var(--mainBlue);
 }
