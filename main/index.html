@@ -10,6 +10,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <script src="../_shared/deps/countUp.js"></script>
+        <script src="../_shared/deps/reconnecting-websocket.min.js"></script>
     </head>
     <body>
         <div id="main">
@@ -27,7 +30,7 @@
 
             <!-- Scores -->
             <div class="score" id="redScore">2,000,000</div>
-            <div id="scoreDifference">&#60 100,000</div>
+            <div id="scoreDifference"><span id="scoreDifferenceLeft">&#60 </span><span id=scoreDifferenceNumber">100,000</span><span id="scoreDifferenceLeft"> &#62</span></div>
             <div class="score" id="blueScore">2,000,000</div>
 
             <!-- Now Playing -->
@@ -47,5 +50,7 @@
             <!-- Chat Display -->
             <div id="chatDisplay"></div>
         </div>
+
+        <script src="index.js"></script>
     </body>
 </html>

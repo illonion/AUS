@@ -45,7 +45,9 @@
     border: 2px solid white;
     width: 38px; height: 38px;
     margin-right: 10px;
-    transform: skew(-14deg)
+    transform: skew(-14deg);
+    background-color: transparent;
+    box-shadow: none;
 }
 .teamStarFillRed {
     background-color: var(--mainRed);
@@ -93,10 +95,10 @@
     background-color: var(--mainBlue);
 }
 #scoreDifference {
-    position: absolute; left: 50%; top: 965px;
+    position: absolute; left: 50%; top: 970px;
     transform: translateX(-50%);
-    width: 200px; height: 50px;
-    line-height: 50px;
+    width: 200px; height: 40px;
+    line-height: 40px;
     font-weight: 900;
     font-size: 25px;
     text-align: center;
@@ -114,6 +116,7 @@
     background-position: center;
     background-image: url("https://assets.ppy.sh/beatmaps/292301/covers/cover.jpg");
     color: white;
+    font-style: italic;
 }
 
 /* Now Playing Layer*/
