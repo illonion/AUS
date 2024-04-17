@@ -98,15 +98,15 @@ socket.onmessage = async (event) => {
         blueTeamStarsEl.innerHTML = ""
 
         // Red Stars
-        function createStars(currentStars, index) {
+        function createStars(currentStars, index, teamStarFillColour) {
             let star = document.createElement("div")
             star.classList.add("teamStar")
-            if (index < currentStars) star.classList.add("teamStarFillRed")
+            if (index < currentStars) star.classList.add(teamStarFillColour)
             return star
         }
         for (let i = 0; i < currentFirstTo; i++) {
-            redTeamStarsEl.append(createStars(currentRedStars, i))
-            blueTeamStarsEl.append(createStars(currentBlueStars, i))
+            redTeamStarsEl.append(createStars(currentRedStars, i, "teamStarFillRed"))
+            blueTeamStarsEl.append(createStars(currentBlueStars, i, "teamStarFillBlue"))
         }
     }
 
