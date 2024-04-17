@@ -33,16 +33,28 @@ const scoreDifferenceNumberEl = document.getElementById("scoreDifferenceNumber")
 const scoreDifferenceRightEl = document.getElementById("scoreDifferenceRight")
 let currentScoreRed, currentScoreBlue, currentScoreDifference
 
-// Chat
-const chatDisplay = document.getElementById("chatDisplay")
-let chatLength = 0
-
 // Score animation
 let scoreAnimation = {
     redScore: new CountUp(redScoreEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
     blueScore: new CountUp(blueScoreEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." }),
     scoreDifferenceNumber: new CountUp(scoreDifferenceNumberEl, 0, 0, 0, 0.2, { useEasing: true, useGrouping: true, separator: ",", decimal: "." })
 }
+
+// Chat
+const chatDisplay = document.getElementById("chatDisplay")
+let chatLength = 0
+
+// Now Playing
+const nowPlayingEl = document.getElementById("nowPlaying")
+const nowPlayingArtistEl = document.getElementById("nowPlayingArtist")
+const nowPlayingSongNameEl = document.getElementById("nowPlayingSongName")
+const nowPlayingDifficultyEl = document.getElementById("nowPlayingDifficulty")
+const nowPlayingSRNumberEl = document.getElementById("nowPlayingSRNumber")
+const nowPlayingARNumberEl = document.getElementById("nowPlayingARNumber")
+const nowPlayingCSNumberEl = document.getElementById("nowPlayingCSNumber")
+const nowPlayingLENNumberEl = document.getElementById("nowPlayingLENNumber")
+let nowPlayingId, nowPlayingMd5
+let foundMapInMappool = false
 
 socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
@@ -185,4 +197,30 @@ socket.onmessage = async (event) => {
         })
     }
     
+    // Beatmaps
+    if (nowPlayingId !== data.menu.bm.id || nowPlayingMd5 !== data.menu.bm.md5) {
+        foundMapInMappool = false
+        nowPlayingId = data.menu.bm.id
+        nowPlayingMd5 = data.menu.bm.md5
+
+        // Metadata
+        nowPlayingEl.style.backgroundImage = `url("https://assets.ppy.sh/beatmaps/${data.menu.bm.set}/covers/cover.jpg")`
+        nowPlayingArtistEl.innerText = data.menu.bm.metadata.artist
+        nowPlayingSongNameEl.innerText = data.menu.bm.metadata.title
+        nowPlayingDifficultyEl.innerText = data.menu.bm.metadata.difficulty
+    }
+
+    // Found map in mappool?
+    if (!foundMapInMappool) {
+        nowPlayingSRNumberEl.innerText = data.menu.bm.stats.fullSR
+        nowPlayingARNumberEl.innerText = data.menu.bm.stats.AR
+        nowPlayingCSNumberEl.innerText = data.menu.bm.stats.CS
+        displayLength(Math.round(data.menu.bm.time.full / 1000))
+    }
+}
+
+function displayLength(songLength) {
+    const minutes = Math.floor(songLength / 60)
+    const seconds = Math.floor(songLength % 60).toString().padStart(2, '0')
+    nowPlayingLENNumberEl.innerText = `${minutes}:${seconds}`
 }
