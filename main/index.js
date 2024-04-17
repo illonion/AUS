@@ -5,6 +5,18 @@ socket.onopen = () => { console.log("Successfully Connected") }
 socket.onclose = event => { console.log("Socket Closed Connection: ", event); socket.send("Client Closed!") }
 socket.onerror = error => { console.log("Socket Error: ", error) }
 
+// Get Mappool
+let allBeatmaps
+fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok')
+        return response.json()
+    })
+    .then(data => { allBeatmaps = data.beatmaps })
+
+// find map in mappool
+const findMapInMappool = beatmapID => allBeatmaps.find(map => map.beatmapID === beatmapID)
+
 // Team Name
 const redTeamNameEl = document.getElementById("redTeamName")
 const blueTeamNameEl = document.getElementById("blueTeamName")
@@ -208,6 +220,20 @@ socket.onmessage = async (event) => {
         nowPlayingArtistEl.innerText = data.menu.bm.metadata.artist
         nowPlayingSongNameEl.innerText = data.menu.bm.metadata.title
         nowPlayingDifficultyEl.innerText = data.menu.bm.metadata.difficulty
+    
+        // If mappool maps exist
+        if (allBeatmaps) {
+            // Found map in mappool
+            const currentMap = findMapInMappool(nowPlayingId)
+            if (!currentMap) return
+            foundMapInMappool = true
+
+            // Display mappool details
+            nowPlayingSRNumberEl.innerText = Math.round(parseFloat(currentMap.difficultyrating) * 100) / 100
+            nowPlayingARNumberEl.innerText = Math.round(parseFloat(currentMap.ar) * 10) / 10
+            nowPlayingCSNumberEl.innerText = Math.round(parseFloat(currentMap.cs) * 10) / 10
+            displayLength(currentMap.songLength)
+        }
     }
 
     // Found map in mappool?
