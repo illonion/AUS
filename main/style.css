@@ -1,29 +1,10 @@
-:root {
-    --mainRed: rgb(255,160,159);
-    --mainBlue: rgb(184,223,255);
-    --boxShadowRed: 0 4px 15px 0 rgba(255,160,159,0.8); 
-    --boxShadowBlue: 0 4px 15px 0 rgba(184,223,255,0.8); 
-
-    --scorePositionHorizontal: 540px;
-    --bottomSectionTop: 907px;
-    --bottomSectionHeight: 173px;
-}
-
 /* Gameplay backgrounds */
-.wholePageCover {
-    position: absolute; left: 0; top: 0;
-    width: 1920px; height: 1080px;
-    background-size: cover;
-}
 #nonGameplayImage { background-image: url("static/non-gameplay.png") }
 #gameplayImage { 
     background-image: url("static/gameplay.png");
     transition: 500ms ease-in-out;
     opacity: 1;
 }
-
-/* Whole page */
-body { font-family: "Urbanist", sans-serif; }
 
 /* --- Team Name --- */
 .teamName {
