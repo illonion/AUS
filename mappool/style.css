@@ -1,4 +1,6 @@
-
+:root {
+    --sideBarColour: rgb(78,137,209);
+}
 #main { background-image: url("static/background.png") }
 
 /* --- Bans ---*/
@@ -204,4 +206,44 @@
 .mapButton:active {
     background-color: gray;
     color: white;
+}
+
+/* --- Side Bar --- */
+#sideBar {
+    position: absolute; left: 1920px; top: 0;
+    width: 250px; height: 1080px;
+    background-color: var(--sideBarColour);
+}
+/* Next Action */
+#nextActionHeader, #nextActionText {
+    color: white;
+    margin-left: 10px;
+}
+#nextActionText {
+    font-weight: 600;
+    font-size: 50px;
+}
+#nextActionButtons {
+    position: relative; left: 50%; transform: translateX(-50%);
+    width: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.nextActionButton {
+    width: 80px; height: 80px;
+    margin: 10px;
+    color: white;
+    background-color: transparent;
+    border: 5px solid white;
+    font-size: 20px;
+    font-weight: 600;
+}
+.nextActionButton:active {
+    background-color: white;
+    color: var(--sideBarColour);
+}
+.fullWidthButton { width: 100%; }
+#resetPicks {
+    margin-top: 50px;
 }

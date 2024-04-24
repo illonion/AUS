@@ -61,6 +61,7 @@ fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
             const mapButton = document.createElement("button")
             mapButton.classList.add("mapButton")
             mapButton.innerText = `${allBeatmaps[i].mod}${allBeatmaps[i].order}`
+            mapButton.addEventListener("click", mapClickEvent)
             mapButtonsSectionFragment.append(mapButton)
 
             switch (allBeatmaps[i].mod) {
@@ -92,6 +93,11 @@ fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
 
 // find map in mappool
 const findMapInMappool = beatmapID => allBeatmaps.find(map => map.beatmapID === beatmapID)
+
+// Map click event
+function mapClickEvent() {
+    console.log(this)
+}
 
 // Team Name
 const redTeamNameEl = document.getElementById("redTeamName")
@@ -252,4 +258,17 @@ function displayLength(songLength) {
     const minutes = Math.floor(songLength / 60)
     const seconds = Math.floor(songLength % 60).toString().padStart(2, '0')
     nowPlayingStatsLENNumberEl.innerText = `${minutes}:${seconds}`
+}
+
+// Change Next Action
+const nextActionTextEl = document.getElementById("nextActionText")
+const changeNextAction = (team, action) => nextActionTextEl.innerText = `${team} ${action}`
+
+// Change autopick
+const autopickToggleEl = document.getElementById("autopickToggle")
+let isAutopick = false
+function changeAutopick() {
+    isAutopick = !isAutopick
+    if (isAutopick) autopickToggleEl.innerText = "OFF"
+    else autopickToggleEl.innerText = "ON"
 }
