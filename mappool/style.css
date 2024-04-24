@@ -31,8 +31,8 @@
     flex-direction: column;
     justify-content: space-between;
 }
-#redBanConainers { left: 50px; }
-#blueBansContainer { right: 50px; }
+#redBanContainers { left: 50px; }
+#blueBanContainers { right: 50px; }
 /* Bans Container */
 .bansContainer {
     position: relative;

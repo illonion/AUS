@@ -9,6 +9,8 @@ socket.onerror = error => { console.log("Socket Error: ", error) }
 const mapPicksContainerEl = document.getElementById("mapPicksContainer")
 const mapPickerSectionEl = document.getElementById("mapPickerSection")
 const mapButtonsSectionEl = document.getElementById("mapButtonsSection")
+const redBanContainersEl = document.getElementById("redBanContainers")
+const blueBanContainersEl = document.getElementById("blueBanContainers")
 let allBeatmaps
 fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
     .then(response => {
@@ -60,44 +62,17 @@ fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
         for (let i = 0; i < allBeatmaps.length; i++) {
             const mapButton = document.createElement("button")
             mapButton.classList.add("mapButton")
+            mapButton.setAttribute("id", allBeatmaps[i].beatmapID)
             mapButton.innerText = `${allBeatmaps[i].mod}${allBeatmaps[i].order}`
             mapButton.addEventListener("click", mapClickEvent)
             mapButtonsSectionFragment.append(mapButton)
-
-            switch (allBeatmaps[i].mod) {
-                case "NM":
-                    mapButton.style.backgroundColor = "rgb(111,168,220)"
-                    break
-                case "HD":
-                    mapButton.style.backgroundColor = "rgb(255,217,102)"
-                    break
-                case "HR":
-                    mapButton.style.backgroundColor = "rgb(224,102,102)"
-                    break
-                case "DT":
-                    mapButton.style.backgroundColor = "rgb(142,124,195)"
-                    break
-                case "EZ":
-                    mapButton.style.backgroundColor = "rgb(147,196,125)"
-                    break
-                case "FM":
-                    mapButton.style.backgroundColor = "rgb(246,178,107)"
-                    break
-                case "TB":
-                    mapButton.style.backgroundColor = "rgb(194,123,160)"
-                    break
-            }
+            setModColourForButton(mapButton, allBeatmaps[i].mod)
         }
         mapButtonsSectionEl.append(mapButtonsSectionFragment)
     })
 
 // find map in mappool
 const findMapInMappool = beatmapID => allBeatmaps.find(map => map.beatmapID === beatmapID)
-
-// Map click event
-function mapClickEvent() {
-    console.log(this)
-}
 
 // Team Name
 const redTeamNameEl = document.getElementById("redTeamName")
@@ -188,6 +163,9 @@ socket.onmessage = async (event) => {
                 nowPlayingStatsCSNumberEl.innerText = Math.round(parseFloat(currentMap.cs) * 10) / 10
                 nowPlayingStatsBPMNumberEl.innerText = Math.round(parseFloat(currentMap.bpm))
                 displayLength(currentMap.songLength)
+
+                // Check for next action
+                if (isAutopick && nextActionTextEl.innerText.includes("Pick")) document.getElementById(currentId).click()
             }
         }
     }
@@ -271,4 +249,129 @@ function changeAutopick() {
     isAutopick = !isAutopick
     if (isAutopick) autopickToggleEl.innerText = "OFF"
     else autopickToggleEl.innerText = "ON"
+}
+
+// Map click event
+function mapClickEvent() {
+
+    // Perform validation checks
+    const nextActionSplit = nextActionTextEl.innerText.split(" ")
+    const nextActionColour = nextActionSplit[0]
+    const nextActionAction = nextActionSplit[1]
+    if (nextActionSplit.length !== 2) return
+    if (nextActionColour !== "Blue" && nextActionColour !== "Red") return
+    if (nextActionAction !== "Pick" && nextActionAction !== "Ban") return
+
+    // Find map
+    if (!allBeatmaps) return
+    const currentIdInt = parseInt(this.id)
+    const currentMap = findMapInMappool(currentIdInt)
+    if (!currentMap) return
+
+    // Check if the map is set elsewhere
+    for (let i = 0; i < redBanContainersEl.childElementCount; i++) {
+        if (redBanContainersEl.children[i].hasAttribute("id") && redBanContainersEl.children[i].id.includes(currentIdInt)) return
+        if (blueBanContainersEl.children[i].hasAttribute("id") && blueBanContainersEl.children[i].id.includes(currentIdInt)) return
+    }
+    for (let i = 0; i < mapPicksContainerEl.childElementCount; i++) {
+        if (mapPicksContainerEl.children[i].hasAttribute("id") && mapPicksContainerEl.children[i].id.includes(currentIdInt)) return
+    }
+
+    // Set Ban
+    function setBan(container, currentId) {
+        // Check tile number
+        let tileNumber = 0
+        if (container.children[0].hasAttribute("id")) tileNumber = 1
+
+        // Remove gray from previous buttons
+        const currentTile = container.children[tileNumber]
+        if (currentTile.hasAttribute("id")) {
+            let previousId = currentTile.id.split("-")[0]
+            console.log(currentTile, previousId)
+            let previousButton = document.getElementById(previousId)
+            previousButton.style.color = "black"
+            setModColourForButton(previousButton, previousButton.innerText.substring(0, 2))
+        }
+
+        // Append data
+        currentTile.setAttribute("id", `${currentId}-Ban`)
+        currentTile.children[0].style.backgroundImage = `url("${currentMap.imgURL}")`
+        currentTile.children[2].innerText = `${currentMap.mod}${currentMap.order}`
+    }
+
+    // Set Pick
+    function setPick(currentId) {
+        // Check tile number
+        let tileNumber = 0
+        let tileFound = false
+        for (tileNumber; tileNumber < mapPicksContainerEl.childElementCount; tileNumber++) {
+            if (mapPicksContainerEl.children[tileNumber].hasAttribute("id")) continue
+            tileFound = true
+            break
+        }
+        if (!tileFound) return
+
+        // Append data
+        const currentTile = mapPicksContainerEl.children[tileNumber]
+        currentTile.setAttribute("id", `${currentId}-Pick`)
+        currentTile.style.borderColor = `var(--main${nextActionColour})`
+        currentTile.children[0].style.backgroundImage = `url("${currentMap.imgURL}")`
+        currentTile.children[2].innerText = `${currentMap.mod}${currentMap.order}`
+
+        // Set map picker colour
+        mapPickerSectionEl.children[tileNumber].style.backgroundColor = `var(--main${nextActionColour})`
+    }
+
+    if (nextActionColour === "Red" && nextActionAction === "Ban") {
+        setBan(redBanContainersEl, this.id)
+    } else if (nextActionColour === "Blue" && nextActionAction === "Ban") {
+        setBan(blueBanContainersEl, this.id)
+    } else if ((nextActionColour === "Red" || nextActionColour === "Blue") && nextActionAction === "Pick") {
+        setPick(this.id)
+    }
+
+    this.style.color = "gray"
+    this.style.backgroundColor = "gray"
+
+    // Set next action
+    const banCount = banCounter()
+    if (nextActionTextEl.innerText === "Red Ban" && (banCount === 1 || banCount === 3)) nextActionTextEl.innerText = "Blue Ban"
+    else if (nextActionTextEl.innerText === "Blue Ban" && (banCount === 1 || banCount === 3)) nextActionTextEl.innerText = "Red Ban"
+    else if (nextActionTextEl.innerText === "Red Pick") nextActionTextEl.innerText = "Blue Pick"
+    else if (nextActionTextEl.innerText === "Blue Pick") nextActionTextEl.innerText = "Red Pick"
+}
+
+function banCounter() {
+    let banCount = 0
+    for (let i = 0; i < blueBanContainersEl.childElementCount; i++) {
+        if (blueBanContainersEl.children[i].hasAttribute("id")) banCount++
+        if (redBanContainersEl.children[i].hasAttribute("id")) banCount++
+    }
+    return banCount
+}
+
+function setModColourForButton(button, mod) {
+    switch (mod) {
+        case "NM":
+            button.style.backgroundColor = "rgb(111,168,220)"
+            break
+        case "HD":
+            button.style.backgroundColor = "rgb(255,217,102)"
+            break
+        case "HR":
+            button.style.backgroundColor = "rgb(224,102,102)"
+            break
+        case "DT":
+            button.style.backgroundColor = "rgb(142,124,195)"
+            break
+        case "EZ":
+            button.style.backgroundColor = "rgb(147,196,125)"
+            break
+        case "FM":
+            button.style.backgroundColor = "rgb(246,178,107)"
+            break
+        case "TB":
+            button.style.backgroundColor = "rgb(194,123,160)"
+            break
+    }
 }
