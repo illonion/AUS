@@ -19,9 +19,9 @@ body { font-family: "Urbanist", sans-serif; }
 
 /* --- Team Name --- */
 .teamName {
-    position: absolute; top: 30px;
+    position: absolute; top: 20px;
     font-weight: 900;
-    font-size: 50px;
+    font-size: 60px;
     color: white;
     font-style: italic;
 }
@@ -56,3 +56,36 @@ body { font-family: "Urbanist", sans-serif; }
     background-color: var(--mainBlue);
     box-shadow: var(--boxShadowBlue);
 }
+
+/* Chat Display */
+#chatDisplay {
+    position: absolute; left: 50%; top: var(--bottomSectionTop);
+    transform: translateX(-50%);
+    height: var(--bottomSectionHeight);
+    background-color: rgb(60, 113, 183);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+#chatDisplay::-webkit-scrollbar { display: none; }
+/* Chat Message container */
+.chatMessageContainer {
+    margin: 2px 15px;
+    font-weight: 700;
+    display: flex;
+}
+/* Chat Message Contents */
+.chatMessageTime { 
+    color: rgb(215,215,215);
+    width: 10%; 
+}
+.chatMessageContent { display: flex; }
+.chatMessageText { 
+    margin-left: 5px; 
+    color: white;
+}
+
+/* Chat Name Colours */
+.left { color: var(--mainRed) }
+.right { color: var(--mainBlue) }
+.unknown { color: yellow }
+.bot { color: lightgreen }

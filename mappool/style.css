@@ -1,42 +1,70 @@
 
 #main { background-image: url("static/background.png") }
 
-/* --- Team Name --- */
-.teamName {
-    position: absolute; top: 30px;
-    font-weight: 900;
-    font-size: 50px;
-    color: white;
-    font-style: italic;
-}
-#redTeamName { left: 50px; }
-#blueTeamName { right: 50px; }
+/* --- Chat Display --- */
+#chatDisplay { width: 1920px; }
 
-/* --- Team Stars --- */
-.teamStars {
-    position: absolute; top: 90px;
-    display: flex;
-}
-#redTeamStars { left: 50px; }
-#blueTeamStars {
-    right: 50px;
-    flex-direction: row-reverse;
-}
-
-/* Individual Team Star */
-.teamStar {
-    border: 2px solid white;
-    width: 38px; height: 38px;
-    margin-right: 10px;
+/* --- Bans ---*/
+/* Bans Text */
+.bansText {
+    position: absolute; top: 200px;
+    font-weight: 800;
+    font-size: 36px;
+    text-align: center;
+    width: 125px; height: 50px;
     transform: skew(-14deg);
-    background-color: transparent;
-    box-shadow: none;
+    line-height: 50px;
+    color: black;
 }
-.teamStarFillRed {
+#redBansText {
+    left: 50px;
     background-color: var(--mainRed);
-    box-shadow: var(--boxShadowRed);
 }
-.teamStarFillBlue {
+#blueBansText {
+    right: 50px;
     background-color: var(--mainBlue);
-    box-shadow: var(--boxShadowBlue);
+}
+/* Bans Containers */
+.banContainers {
+    position: absolute; top: 260px;
+    height: 110px;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#redBanConainers { left: 50px; }
+#blueBansContainer { right: 50px; }
+/* Bans Container */
+.bansContainer {
+    position: relative;
+    width: 250px; height: 50px;
+    background-color: lightgray;
+    transform: skew(-14deg);
+    overflow: hidden;
+}
+.bansContainerBackground {
+    position: absolute; top: 0; left: -7px;
+    width: calc(100% + 14px); height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
+    transform: skew(14deg);
+}
+.bansContainerLayer {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6)
+}
+.bansContainerText {
+    position: absolute; 
+    width: 250px; height: inherit;
+    line-height: 50px;
+    font-weight: 800;
+    font-size: 36px;
+    color: white;
+}
+.redBansContainerText { left: 22px; }
+.blueBansContainerText { 
+    right: 22px; 
+    text-align: right;
 }
