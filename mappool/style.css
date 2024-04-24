@@ -44,7 +44,6 @@
     width: calc(100% + 14px); height: 100%;
     background-size: cover;
     background-position: center;
-    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
     transform: skew(14deg);
 }
 .bansContainerLayer {
@@ -79,7 +78,6 @@
     transform: skew(14deg);
     background-size: cover;
     background-position: center;
-    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
 }
 #nowPlayingLayer {
     position: absolute; top: 0; left: 0;
@@ -156,7 +154,6 @@
     width: calc(100% + 100px); height: 100%;
     background-size: cover;
     background-position: center;
-    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
     transform: skew(14deg);
 }
 .mapPickLayer {

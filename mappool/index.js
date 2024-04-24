@@ -6,13 +6,89 @@ socket.onclose = event => { console.log("Socket Closed Connection: ", event); so
 socket.onerror = error => { console.log("Socket Error: ", error) }
 
 // Get Mappool
+const mapPicksContainerEl = document.getElementById("mapPicksContainer")
+const mapPickerSectionEl = document.getElementById("mapPickerSection")
+const mapButtonsSectionEl = document.getElementById("mapButtonsSection")
 let allBeatmaps
 fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
     .then(response => {
         if (!response.ok) throw new Error('Network response was not ok')
         return response.json()
     })
-    .then(data => { allBeatmaps = data.beatmaps })
+    .then(data => { 
+        let currentBestOf
+        allBeatmaps = data.beatmaps 
+
+        // Set current best of
+        switch (data.roundName.toLowerCase()) {
+            case "quarterfinals": case "semifinals":
+                currentBestOf = 11
+                break
+            case "finals": case "grand finals":
+                currentBestOf = 13
+        }
+
+        let mapPickContainersFragment = document.createDocumentFragment()
+        let mapPickerSectionFragment = document.createDocumentFragment()
+        for (let i = 0; i < currentBestOf; i++) {
+            // Create map pick tile
+            const mapPickContainer = document.createElement("div")
+            mapPickContainer.classList.add("mapPickContainer")
+
+            const mapPickBackground = document.createElement("div")
+            mapPickBackground.classList.add("mapPickBackground")
+
+            const mapPickLayer = document.createElement("div")
+            mapPickLayer.classList.add("mapPickLayer")
+
+            const mapPickText = document.createElement("div")
+            mapPickText.classList.add("mapPickText")
+
+            mapPickContainer.append(mapPickBackground, mapPickLayer, mapPickText)
+            mapPickContainersFragment.append(mapPickContainer)
+
+            // Create map picker tile
+            const mapPicker = document.createElement("div")
+            mapPicker.classList.add("mapPicker")
+            mapPickerSectionFragment.append(mapPicker)
+        }
+        mapPicksContainerEl.append(mapPickContainersFragment)
+        mapPickerSectionEl.append(mapPickerSectionFragment)
+
+        // Create map buttons
+        let mapButtonsSectionFragment = document.createDocumentFragment()
+        for (let i = 0; i < allBeatmaps.length; i++) {
+            const mapButton = document.createElement("button")
+            mapButton.classList.add("mapButton")
+            mapButton.innerText = `${allBeatmaps[i].mod}${allBeatmaps[i].order}`
+            mapButtonsSectionFragment.append(mapButton)
+
+            switch (allBeatmaps[i].mod) {
+                case "NM":
+                    mapButton.style.backgroundColor = "rgb(111,168,220)"
+                    break
+                case "HD":
+                    mapButton.style.backgroundColor = "rgb(255,217,102)"
+                    break
+                case "HR":
+                    mapButton.style.backgroundColor = "rgb(224,102,102)"
+                    break
+                case "DT":
+                    mapButton.style.backgroundColor = "rgb(142,124,195)"
+                    break
+                case "EZ":
+                    mapButton.style.backgroundColor = "rgb(147,196,125)"
+                    break
+                case "FM":
+                    mapButton.style.backgroundColor = "rgb(246,178,107)"
+                    break
+                case "TB":
+                    mapButton.style.backgroundColor = "rgb(194,123,160)"
+                    break
+            }
+        }
+        mapButtonsSectionEl.append(mapButtonsSectionFragment)
+    })
 
 // find map in mappool
 const findMapInMappool = beatmapID => allBeatmaps.find(map => map.beatmapID === beatmapID)
@@ -97,14 +173,16 @@ socket.onmessage = async (event) => {
         setWrapForTexts(nowPlayingTitleSongEl, 552.4)
         setWrapForTexts(nowPlayingDifficultyEl, 548)
 
-        const currentMap = findMapInMappool(currentId)
-        if (currentMap) {
-            mappoolMapFound = true
-            nowPlayingStatsSRNumberEl.innerText = Math.round(parseFloat(currentMap.difficultyrating) * 100) / 100
-            nowPlayingStatsARNumberEl.innerText = Math.round(parseFloat(currentMap.ar) * 10) / 10
-            nowPlayingStatsCSNumberEl.innerText = Math.round(parseFloat(currentMap.cs) * 10) / 10
-            nowPlayingStatsBPMNumberEl.innerText = Math.round(parseFloat(currentMap.bpm))
-            displayLength(currentMap.songLength)
+        if (allBeatmaps) {
+            const currentMap = findMapInMappool(currentId)
+            if (currentMap) {
+                mappoolMapFound = true
+                nowPlayingStatsSRNumberEl.innerText = Math.round(parseFloat(currentMap.difficultyrating) * 100) / 100
+                nowPlayingStatsARNumberEl.innerText = Math.round(parseFloat(currentMap.ar) * 10) / 10
+                nowPlayingStatsCSNumberEl.innerText = Math.round(parseFloat(currentMap.cs) * 10) / 10
+                nowPlayingStatsBPMNumberEl.innerText = Math.round(parseFloat(currentMap.bpm))
+                displayLength(currentMap.songLength)
+            }
         }
     }
 
