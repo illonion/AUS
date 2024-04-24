@@ -113,7 +113,4 @@
 #nowPlayingSR { color: gold; }
 
 /* --- Chat Display --- */
-#chatDisplay { 
-    width: 650px; 
-    opacity: 0;
-}
+#chatDisplay { opacity: 0; }

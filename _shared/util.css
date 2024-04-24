@@ -61,7 +61,7 @@ body { font-family: "Urbanist", sans-serif; }
 #chatDisplay {
     position: absolute; left: 50%; top: var(--bottomSectionTop);
     transform: translateX(-50%);
-    height: var(--bottomSectionHeight);
+    width: 650px; height: var(--bottomSectionHeight);
     background-color: rgb(60, 113, 183);
     overflow-x: hidden;
     overflow-y: scroll;

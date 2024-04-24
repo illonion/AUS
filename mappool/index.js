@@ -27,6 +27,10 @@ const redTeamStarsEl = document.getElementById("redTeamStars")
 const blueTeamStarsEl = document.getElementById("blueTeamStars")
 let currentBestOf, currentRedStars, currentBlueStars
 
+// Chat
+const chatDisplay = document.getElementById("chatDisplay")
+let chatLength = 0
+
 socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
 

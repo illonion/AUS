@@ -1,9 +1,6 @@
 
 #main { background-image: url("static/background.png") }
 
-/* --- Chat Display --- */
-#chatDisplay { width: 1920px; }
-
 /* --- Bans ---*/
 /* Bans Text */
 .bansText {
@@ -67,4 +64,147 @@
 .blueBansContainerText { 
     right: 22px; 
     text-align: right;
+}
+
+/* --- Now Playing Section --- */
+#nowPlayingContainer {
+    position: absolute; left: 50%; top: 200px;
+    width: 600px; height: 170px;
+    transform: skew(-14deg) translateX(-50%);
+    overflow: hidden;
+}
+#nowPlayingBackground {
+    position: absolute; left: -22px; top: 0;
+    width: calc(100% + 44px); height: 100%;
+    transform: skew(14deg);
+    background-size: cover;
+    background-position: center;
+    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
+}
+#nowPlayingLayer {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6)
+}
+.nowPlayingWrapper {
+    position: absolute; left: 50%; 
+    transform: translateX(-50%);
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+}
+#nowPlayingTitleSongWrapper { 
+    top: 25px;
+    font-size: 40px;
+}
+#nowPlayingDifficultyWrapper {
+    top: 80px;
+    font-size: 25px;
+}
+#nowPlayingTitleSong, #nowPlayingDifficulty {
+    width: max-content;
+    position: relative;
+    display: inline-block;
+    min-width: 100%; 
+}
+.nowPlayingTextWrap { 
+    text-align: left;
+	transform: translate(540px);
+    animation: nowPlayingTextTranslate 12s infinite linear; 
+}
+@keyframes nowPlayingTextTranslate {
+    0%, 20% { transform: translateX(0px); }
+    80%, 100% { transform: translateX(calc(-100% + 552px)); }
+}
+
+/* Now Playing Stats */
+#nowPlayingStats {
+    position: absolute; left: 50%; top: 120px;
+    width: 90%;
+    font-weight: 600;
+    font-size: 25px;
+    color: white;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+#nowPlayingStatsSR { color: gold; }
+
+/* --- Map Pick Section --- */
+#mapPicksContainer {
+    position: absolute; top: 400px;
+    width: 1920px; height: 340px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+/* Map Pick Container */
+.mapPickContainer {
+    position: relative;
+    border: 5px solid white;
+    transform: skew(-14deg);
+    width: 105px; height: calc(100% - 10px);
+    margin: 0 10px;
+    overflow: hidden;
+}
+.mapPickBackground {
+    position: absolute; left: -50px; top: 0; 
+    width: calc(100% + 100px); height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url("https://assets.ppy.sh/beatmaps/984684/covers/cover.jpg");
+    transform: skew(14deg);
+}
+.mapPickLayer {
+    position: absolute; left: 0; top: 0; 
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6)
+}
+.mapPickText {
+    position: absolute; left: 50%; top: 20px;
+    transform: translateX(-50%);
+    color: white;
+    font-weight: 800;
+    font-size: 32px;
+}
+
+/* --- Map Picker Section --- */
+#mapPickerSection {
+    position: absolute; top: 750px;
+    width: 1837px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+.mapPicker {
+    width: 115px; height: 5px;
+    background-color: white;
+    margin: 0 10px;
+    transform: skew(-14deg);
+}
+
+/* --- Map Button Section --- */
+#mapButtonsSection {
+    position: absolute; left: 50%; top: 780px;
+    transform: translateX(-50%);
+    width: 1034px;
+    display: flex; flex-wrap: wrap;
+    justify-content: center;
+}
+.mapButton {
+    width: 80px; height: 35px;
+    border: none;
+    margin: 7px;
+    font-weight: 800;
+    font-size: 18px;
+    background-color: white;
+    transform: skew(-14deg);
+}
+.mapButton:active {
+    background-color: gray;
+    color: white;
 }
