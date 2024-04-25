@@ -385,10 +385,7 @@ pickBanManagementSelectEl.onchange = function() {
     while (pickBanManagementContainerEl.childElementCount > 2) pickBanManagementContainerEl.lastChild.remove()
 
     if (currentPickManagementSelectAction === "setBan" || currentPickManagementSelectAction === "removeBan") {
-        // Create section header asking which team's ban
-        const teamBanSelectHeader = document.createElement("h1")
-        teamBanSelectHeader.classList.add("sideBarSectionHeader")
-        teamBanSelectHeader.innerText = "Which team's ban?"
+        const teamBanSelectHeader = createPickMangementHeader("Which team's ban?")
 
         // Create select
         const teamBanSelect = document.createElement("select")
@@ -404,10 +401,7 @@ pickBanManagementSelectEl.onchange = function() {
         pickBanManagementContainerEl.append(teamBanSelectHeader, teamBanSelect)
 
         if (currentPickManagementSelectAction === "setBan") {
-            // Create section header asking which map
-            const teamBanSelectMapHeader = document.createElement("h1")
-            teamBanSelectMapHeader.classList.add("sideBarSectionHeader")
-            teamBanSelectMapHeader.innerText = "Which map?"
+            const teamBanSelectMapHeader = createPickMangementHeader("Which map?")
 
             // Create buttons for all maps
             const teamBanSelectMappoolMapSelect = document.createElement("div")
@@ -434,6 +428,13 @@ pickBanManagementSelectEl.onchange = function() {
 
         pickBanManagementContainerEl.append(applyChangesButton)
     }
+}
+
+// Create header
+function createPickMangementHeader(message) {
+    const teamBanSelectHeader = document.createElement("h1")
+    teamBanSelectHeader.classList.add("sideBarSectionHeader")
+    teamBanSelectHeader.innerText = message
 }
 
 // Create ban option
