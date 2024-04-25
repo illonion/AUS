@@ -276,13 +276,22 @@
 .pickBanManagementSelect::-webkit-scrollbar { display: none; }
 .pickBanManagementSelect > * { font-family: "Urbanist"; font-size: 24px; font-weight: 500; }
 /* Pick Ban Management Map Selection */
-.teamBanSelectMappoolMapSelect {
+.teamPickBanSelectMappoolMapSelect {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 .teamBanSelectMappoolMap {
-    width: 60px; height: 40px;
+    width: 60px; height: 31px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 20px; font-weight: 500;
+    margin: 0px 10px;
+    font-weight: 500
+}
+.teamPickSelectPickTileMap {
+    width: 90px; height: 31px;
     background-color: transparent;
     border: none;
     color: white;

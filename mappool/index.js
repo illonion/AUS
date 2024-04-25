@@ -382,6 +382,9 @@ let currentPickManagementSelectAction
 pickBanManagementSelectEl.onchange = function() {
     currentPickManagementSelectAction = pickBanManagementSelectEl.value
 
+    // Set everything back to default
+    currentTeamBanSelectPickTile = 0
+    pickBanManagementMap = undefined
     while (pickBanManagementContainerEl.childElementCount > 2) pickBanManagementContainerEl.lastChild.remove()
 
     if (currentPickManagementSelectAction === "setBan" || currentPickManagementSelectAction === "removeBan") {
@@ -405,7 +408,7 @@ pickBanManagementSelectEl.onchange = function() {
 
             // Create buttons for all maps
             const teamBanSelectMappoolMapSelect = document.createElement("div")
-            teamBanSelectMappoolMapSelect.classList.add("teamBanSelectMappoolMapSelect")
+            teamBanSelectMappoolMapSelect.classList.add("teamPickBanSelectMappoolMapSelect")
             
             for (let i = 0; i < allBeatmaps.length; i++) {
                 const teamBanSelectMappoolMap = document.createElement("button")
@@ -417,17 +420,80 @@ pickBanManagementSelectEl.onchange = function() {
             }
             pickBanManagementContainerEl.append(teamBanSelectMapHeader, teamBanSelectMappoolMapSelect)
         }
-
-        // Apply changes button
-        const applyChangesButton = document.createElement("button")
-        applyChangesButton.classList.add("nextActionButton", "fullWidthButton")
-        applyChangesButton.setAttribute("id", "applyChanges")
-        applyChangesButton.style.width = "200px"
-        applyChangesButton.setAttribute("onclick", (currentPickManagementSelectAction === "setBan")? "pickManagementSetBan()" : "pickManagementRemoveBan()")
-        applyChangesButton.innerText = "Apply Changes"
-
-        pickBanManagementContainerEl.append(applyChangesButton)
     }
+
+    if (currentPickManagementSelectAction === "setPick" || currentPickManagementSelectAction === "removePick") {
+        const teamPickSelectHeader = createPickMangementHeader("Which pick tile?")
+
+        // Create buttons for all tiles
+        const teamPickSelectPickTileMapSelect = document.createElement("div")
+        teamPickSelectPickTileMapSelect.setAttribute("id", "teamPickSelectPickTileMapSelect")
+        teamPickSelectPickTileMapSelect.classList.add("teamPickBanSelectMappoolMapSelect")
+
+        for (let i = 0; i < mapPicksContainerEl.childElementCount; i++) {
+            const teamPickSelectPickTileMap = document.createElement("button")
+            const pickTileString = `pickTile${i}`
+            teamPickSelectPickTileMap.classList.add("teamPickSelectPickTileMap")
+            teamPickSelectPickTileMap.innerText = `PT ${i + 1}`
+            teamPickSelectPickTileMap.setAttribute("id", pickTileString)
+            teamPickSelectPickTileMap.setAttribute("onclick", `getPickBanManagementPickTile('${pickTileString}')`)
+            teamPickSelectPickTileMapSelect.append(teamPickSelectPickTileMap)
+        }
+
+        pickBanManagementContainerEl.append(teamPickSelectHeader, teamPickSelectPickTileMapSelect)
+
+        if (currentPickManagementSelectAction === "setPick") {
+            const teamPickSelectMapHeader = createPickMangementHeader("Which map?")
+
+            // Create buttons for all maps
+            const teamPickSelectMappoolMapSelect = document.createElement("div")
+            teamPickSelectMappoolMapSelect.classList.add("teamPickBanSelectMappoolMapSelect")
+            
+            for (let i = 0; i < allBeatmaps.length; i++) {
+                const teamPickSelectMappoolMap = document.createElement("button")
+                teamPickSelectMappoolMap.classList.add("teamBanSelectMappoolMap")
+                teamPickSelectMappoolMap.innerText = `${allBeatmaps[i].mod}${allBeatmaps[i].order}`
+                teamPickSelectMappoolMap.setAttribute("id", `${allBeatmaps[i].beatmapID}-pickBanManagement`)
+                teamPickSelectMappoolMap.setAttribute("onclick", `getPickBanManagementMap(${allBeatmaps[i].beatmapID})`)
+                teamPickSelectMappoolMapSelect.append(teamPickSelectMappoolMap)
+            }
+            
+            const teamPickHeader = createPickMangementHeader("Which team?")
+
+            // Create select
+            const teamPickSelect = document.createElement("select")
+            teamPickSelect.classList.add("pickBanManagementSelect")
+            teamPickSelect.setAttribute("id", "teamPickSelect")
+            teamPickSelect.setAttribute("size", 2)
+
+            // Create elements
+            const redTeam = document.createElement("option")
+            redTeam.setAttribute("value", `Red`)
+            redTeam.innerText = "Red Team"
+            const blueTeam = document.createElement("option")
+            blueTeam.setAttribute("value", `Blue`)
+            blueTeam.innerText = "Blue Team"
+
+            teamPickSelect.append(redTeam, blueTeam)
+            pickBanManagementContainerEl.append(teamPickSelectMapHeader, teamPickSelectMappoolMapSelect, teamPickHeader, teamPickSelect)
+        }
+    }
+
+    // Apply changes button
+    const applyChangesButton = document.createElement("button")
+    applyChangesButton.classList.add("nextActionButton", "fullWidthButton")
+    applyChangesButton.setAttribute("id", "applyChanges")
+    applyChangesButton.style.width = "200px"
+    applyChangesButton.innerText = "Apply Changes"
+
+    switch (currentPickManagementSelectAction) {
+        case "setBan": applyChangesButton.setAttribute("onclick", "pickManagementSetBan()"); break;
+        case "removeBan": applyChangesButton.setAttribute("onclick", "pickManagementRemoveBan()"); break;
+        case "setPick": applyChangesButton.setAttribute("onclick", "pickManagementSetPick()"); break;
+        case "removePick": applyChangesButton.setAttribute("onclick", "pickManagementRemovePick()"); break;
+    }
+
+    pickBanManagementContainerEl.append(applyChangesButton)
 }
 
 // Create header
@@ -435,6 +501,7 @@ function createPickMangementHeader(message) {
     const teamBanSelectHeader = document.createElement("h1")
     teamBanSelectHeader.classList.add("sideBarSectionHeader")
     teamBanSelectHeader.innerText = message
+    return teamBanSelectHeader
 }
 
 // Create ban option
@@ -545,5 +612,69 @@ function pickBanManagementGetPreviousIdCount(tile) {
         let previousButton = document.getElementById(`${previousId}`)
         previousButton.style.color = "black"
         setModColourForButton(previousButton, previousButton.innerText.substring(0, 2))
+    }
+}
+
+//
+const teamPickSelectPickTileMapEls = document.getElementsByClassName("teamPickSelectPickTileMap")
+let currentTeamBanSelectPickTile
+function getPickBanManagementPickTile(pickTileId) {
+    currentTeamBanSelectPickTile = pickTileId.match(/\d+/g).map(Number)[0]
+    for (let i = 0; i < teamPickSelectPickTileMapEls.length; i++) {
+        teamPickSelectPickTileMapEls[i].style.color = "white"
+        teamPickSelectPickTileMapEls[i].style.background = "transparent"
+    }
+    const currentPickManagementTileMap = document.getElementById(`${pickTileId}`)
+    currentPickManagementTileMap.style.color = "black"
+    currentPickManagementTileMap.style.backgroundColor = "rgb(206,206,206)"
+}
+
+// Set Pick
+function pickManagementSetPick() {
+    // General checks
+    if (currentTeamBanSelectPickTile === undefined) return
+    if (!pickBanManagementMap) return
+    const teamPickSelectEl = document.getElementById("teamPickSelect")
+    if (!teamPickSelectEl.value) return
+    // Find map 
+    const currentMap = findMapInMappool(pickBanManagementMap)
+    if (!currentMap) return
+    // Find tile
+    const currentTile = mapPicksContainerEl.children[currentTeamBanSelectPickTile]
+    if (!currentTile) return
+    // Check for duplicate ids
+    if (currentTile.hasAttribute("id")) {
+        pickBanManagementGetPreviousIdCount(currentTile)
+    }
+
+    // Set map information
+    currentTile.setAttribute("id", `${pickBanManagementMap}-Pick`)
+    currentTile.style.borderColor = `var(--main${teamPickSelectEl.value})`
+    currentTile.children[0].style.backgroundImage = `url("${currentMap.imgURL}")`
+    currentTile.children[2].innerText = `${currentMap.mod}${currentMap.order}`
+    mapPickerSectionEl.children[currentTeamBanSelectPickTile].style.backgroundColor = `var(--main${teamPickSelectEl.value})`
+
+    // Set colour to gray'
+    const currentPickButton = document.getElementById(`${pickBanManagementMap}`)
+    currentPickButton.style.color = "gray"
+    currentPickButton.style.backgroundColor = "gray"
+}
+
+// Remove Pick
+function pickManagementRemovePick() {
+    // General checks
+    if (currentTeamBanSelectPickTile === undefined) return
+
+    // Find tile
+    const currentTile = mapPicksContainerEl.children[currentTeamBanSelectPickTile]
+    if (!currentTile) return
+
+    if (currentTile.hasAttribute("id")) {
+        pickBanManagementGetPreviousIdCount(currentTile)
+        currentTile.removeAttribute("id")
+        currentTile.style.borderColor = "white"
+        currentTile.children[0].style.backgroundImage = "none"
+        currentTile.children[2].innerText = ""
+        mapPickerSectionEl.children[currentTeamBanSelectPickTile].style.backgroundColor = `white`
     }
 }
