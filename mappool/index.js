@@ -287,8 +287,7 @@ function mapClickEvent() {
         const currentTile = container.children[tileNumber]
         if (currentTile.hasAttribute("id")) {
             let previousId = currentTile.id.split("-")[0]
-            console.log(currentTile, previousId)
-            let previousButton = document.getElementById(previousId)
+            let previousButton = document.getElementById(`${previousId}`)
             previousButton.style.color = "black"
             setModColourForButton(previousButton, previousButton.innerText.substring(0, 2))
         }
@@ -374,4 +373,143 @@ function setModColourForButton(button, mod) {
             button.style.backgroundColor = "rgb(194,123,160)"
             break
     }
+}
+
+// Pick Management
+const pickBanManagementContainerEl = document.getElementById("pickBanManagementContainer")
+const pickBanManagementSelectEl = document.getElementById("pickBanManagementSelect")
+let currentPickManagementSelectAction
+pickBanManagementSelectEl.onchange = function() {
+    currentPickManagementSelectAction = pickBanManagementSelectEl.value
+
+    // Remove 
+    while (pickBanManagementContainerEl.childElementCount > 2) pickBanManagementContainerEl.lastChild.remove()
+
+    if (currentPickManagementSelectAction === "setBan") {
+        // Create section header asking which team's ban
+        const teamBanSelectHeader = document.createElement("h1")
+        teamBanSelectHeader.classList.add("sideBarSectionHeader")
+        teamBanSelectHeader.innerText = "Which team's ban?"
+
+        // Create select
+        const teamBanSelect = document.createElement("select")
+        teamBanSelect.classList.add("pickBanManagementSelect")
+        teamBanSelect.setAttribute("id", "teamBanSelect")
+        teamBanSelect.setAttribute("size", 4)
+
+        // Create all options
+        teamBanSelect.append(createBanOption("red", 1))
+        teamBanSelect.append(createBanOption("blue", 1))
+        teamBanSelect.append(createBanOption("red", 2))
+        teamBanSelect.append(createBanOption("blue", 2))
+
+        // Create section header asking which map
+        const teamBanSelectMapHeader = document.createElement("h1")
+        teamBanSelectMapHeader.classList.add("sideBarSectionHeader")
+        teamBanSelectMapHeader.innerText = "Which map?"
+
+        // Create buttons for all maps
+        const teamBanSelectMappoolMapSelect = document.createElement("div")
+        teamBanSelectMappoolMapSelect.classList.add("teamBanSelectMappoolMapSelect")
+        
+        for (let i = 0; i < allBeatmaps.length; i++) {
+            const teamBanSelectMappoolMap = document.createElement("button")
+            teamBanSelectMappoolMap.classList.add("teamBanSelectMappoolMap")
+            teamBanSelectMappoolMap.innerText = `${allBeatmaps[i].mod}${allBeatmaps[i].order}`
+            teamBanSelectMappoolMap.setAttribute("id", `${allBeatmaps[i].beatmapID}-pickBanManagement`)
+            teamBanSelectMappoolMap.setAttribute("onclick", `getPickBanManagementMap(${allBeatmaps[i].beatmapID})`)
+            teamBanSelectMappoolMapSelect.append(teamBanSelectMappoolMap)
+        }
+
+        // Apply changes button
+        const applyChangesButton = document.createElement("button")
+        applyChangesButton.classList.add("nextActionButton", "fullWidthButton")
+        applyChangesButton.setAttribute("id", "applyChanges")
+        applyChangesButton.style.width = "200px"
+        applyChangesButton.setAttribute("onclick", "pickManagementSetBan()")
+        applyChangesButton.innerText = "Apply Changes"
+
+        pickBanManagementContainerEl.append(teamBanSelectHeader, teamBanSelect, teamBanSelectMapHeader, teamBanSelectMappoolMapSelect, applyChangesButton)
+    }
+}
+
+// Create ban option
+function createBanOption(colour, index) {
+    const teamBan = document.createElement("option")
+    teamBan.setAttribute("value", `${colour}Ban${index}`)
+    teamBan.innerText = `${colour.charAt(0).toUpperCase() + colour.slice(1)} Ban ${index}`
+    return teamBan
+}
+
+// Get Map Option
+const teamBanSelectMappoolMapEls = document.getElementsByClassName("teamBanSelectMappoolMap")
+let pickBanManagementMap
+function getPickBanManagementMap(beatmapID) {
+    pickBanManagementMap = beatmapID
+    for (let i = 0; i < teamBanSelectMappoolMapEls.length; i++) {
+        teamBanSelectMappoolMapEls[i].style.color = "white"
+        teamBanSelectMappoolMapEls[i].style.background = "transparent"
+    }
+    const currentPickManagementMap = document.getElementById(`${beatmapID}-pickBanManagement`)
+    currentPickManagementMap.style.color = "black"
+    currentPickManagementMap.style.backgroundColor = "rgb(206,206,206)"
+}
+
+// Pick Mangement Set Ban
+function pickManagementSetBan() {
+    // Do basic checks
+    if (!pickBanManagementMap) return
+    const teamBanSelectEl = document.getElementById("teamBanSelect")
+    if (!teamBanSelectEl.value) return
+
+    // Find the current map
+    const currentMap = findMapInMappool(pickBanManagementMap)
+    if (!currentMap) return
+
+    // Find current tile
+    let currentTile
+    if (teamBanSelectEl.value === "redBan1") currentTile = redBanContainersEl.children[0]
+    else if (teamBanSelectEl.value === "redBan2") currentTile = redBanContainersEl.children[1]
+    else if (teamBanSelectEl.value === "blueBan1") currentTile = blueBanContainersEl.children[0]
+    else if (teamBanSelectEl.value === "blueBan2") currentTile = blueBanContainersEl.children[1]
+    if (!currentTile) return
+
+    // Find if there is another map on the tile
+    if (currentTile.hasAttribute("id")) {
+        let previousId = currentTile.id.split("-")[0]
+
+        // Find if the same id is anywhere else (if the count is only 1, then it is only in that location)
+        let previousIdCount = 0
+        for (let i = 0; i < mapPicksContainerEl.childElementCount; i++) {
+            if (!mapPicksContainerEl.children[i].hasAttribute("id") || !mapPicksContainerEl.children[i].id.includes(previousId)) continue
+            previousIdCount++
+        }
+        for (let i = 0; i < redBanContainersEl.childElementCount; i++) {
+            if (!redBanContainersEl.children[i].hasAttribute("id") || !redBanContainersEl.children[i].id.includes(previousId)) continue
+            previousIdCount++
+        }
+        for (let i = 0; i < blueBanContainersEl.childElementCount; i++) {
+            if (!blueBanContainersEl.children[i].hasAttribute("id") || !blueBanContainersEl.children[i].id.includes(previousId)) continue
+            previousIdCount++
+        }
+
+        // Only if this was the only instance of the id, then we remove the colouring.
+        if (previousIdCount === 1) {
+            let previousButton = document.getElementById(`${previousId}`)
+            console.log(previousId)
+            console.log(previousButton)
+            previousButton.style.color = "black"
+            setModColourForButton(previousButton, previousButton.innerText.substring(0, 2))
+        }
+    }
+
+    // Set tile
+    currentTile.setAttribute("id", `${pickBanManagementMap}-Ban`)
+    currentTile.children[0].style.backgroundImage = `url("${currentMap.imgURL}")`
+    currentTile.children[2].innerText = `${currentMap.mod}${currentMap.order}`
+
+    // Set colour of the map pick
+    const currentMapPick = document.getElementById(`${pickBanManagementMap}`)
+    currentMapPick.style.color = "gray"
+    currentMapPick.style.backgroundColor = "gray"
 }

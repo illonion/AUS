@@ -82,19 +82,33 @@
             <div id="chatDisplay"></div>
         </div>
         <div id="sideBar">
-            <section id="nextActionContainer">
-                <h1 id="nextActionHeader">Next Action: </h1>
-                <div id="nextActionText"></div>
-                <div id="nextActionButtons">
-                    <button class="nextActionButton" onclick="changeNextAction('Red', 'Ban')">Red Ban</button>
-                    <button class="nextActionButton" onclick="changeNextAction('Blue', 'Ban')">Blue Ban</button>
-                    <button class="nextActionButton" onclick="changeNextAction('Red', 'Pick')">Red Pick</button>
-                    <button class="nextActionButton" onclick="changeNextAction('Blue', 'Pick')">Blue Pick</button>
-                    <button class="nextActionButton fullWidthButton" onclick="changeAutopick()">AUTOPICK: <span id="autopickToggle">OFF</span></button>
-                    <button class="nextActionButton fullWidthButton" id="resetPicks" onclick="">Reset Picks</button>
-                    <button class="nextActionButton fullWidthButton" onclick="">Reset Bans</button>
-                    <button class="nextActionButton fullWidthButton" onclick="">Reset Everything</button>
-                </div>
+            <section class="sideBarColumn" id="sideBarColumn1">
+                <section>
+                    <h1 class="sideBarSectionHeader">Next Action: </h1>
+                    <div id="nextActionText"></div>
+                    <div id="nextActionButtons">
+                        <button class="nextActionButton" onclick="changeNextAction('Red', 'Ban')">Red Ban</button>
+                        <button class="nextActionButton" onclick="changeNextAction('Blue', 'Ban')">Blue Ban</button>
+                        <button class="nextActionButton" onclick="changeNextAction('Red', 'Pick')">Red Pick</button>
+                        <button class="nextActionButton" onclick="changeNextAction('Blue', 'Pick')">Blue Pick</button>
+                        <button class="nextActionButton fullWidthButton" onclick="changeAutopick()">AUTOPICK: <span id="autopickToggle">OFF</span></button>
+                        <button class="nextActionButton fullWidthButton" id="resetPicks" onclick="">Reset Picks</button>
+                        <button class="nextActionButton fullWidthButton" onclick="">Reset Bans</button>
+                        <button class="nextActionButton fullWidthButton" onclick="">Reset Everything</button>
+                    </div>
+                </section>
+            </section>
+            <div class="sideBarDivider" id="sideBarDivider1"></div>
+            <section class="sideBarColumn" id="sideBarColumn2">
+                <section id="pickBanManagementContainer">
+                    <h1 class="sideBarSectionHeader">Pick / Ban Management (Only use this when necessary)</h1>
+                    <select size="4" class="pickBanManagementSelect" id="pickBanManagementSelect">
+                        <option value="setBan">Set Ban</option>
+                        <option value="removeBan">Remove Ban</option>
+                        <option value="setPick">Set Pick</option>
+                        <option value="removePick">Remove Pick</option>
+                    </select>
+                </section>
             </section>
         </div>
 

@@ -211,11 +211,25 @@
 /* --- Side Bar --- */
 #sideBar {
     position: absolute; left: 1920px; top: 0;
-    width: 250px; height: 1080px;
+    width: 500px; height: 1080px;
     background-color: var(--sideBarColour);
 }
+/* Side Bar Column */
+.sideBarColumn {
+    position: absolute; top: 0;
+    width: 250px; height: 1080px;
+}
+#sideBarColumn1 { left: 0; }
+#sideBarColumn2 { left: 250px; }
+/* Side Bar Divider */
+.sideBarDivider {
+    position: absolute; top: 0;
+    width: 2px; height: 1080px;
+    background-color: white;
+}
+#sideBarDivider1 { left: 249px; }
 /* Next Action */
-#nextActionHeader, #nextActionText {
+.sideBarSectionHeader, #nextActionText {
     color: white;
     margin-left: 10px;
 }
@@ -246,4 +260,38 @@
 .fullWidthButton { width: 100%; }
 #resetPicks {
     margin-top: 50px;
+}
+/* Pick Ban Management */
+.pickBanManagementSelect {
+    position: relative;
+    left: 50%; transform: translateX(-50%);
+    width: 200px;
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+
+}
+.pickBanManagementSelect::-webkit-scrollbar { display: none; }
+.pickBanManagementSelect > * { font-family: "Urbanist"; font-size: 24px; font-weight: 500; }
+/* Pick Ban Management Map Selection */
+.teamBanSelectMappoolMapSelect {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.teamBanSelectMappoolMap {
+    width: 60px; height: 40px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 20px; font-weight: 500;
+    margin: 0px 10px;
+    font-weight: 500
+}
+
+/* Side Bar Apply Changes Button */
+#applyChanges {
+    margin-left: 10%;
 }
