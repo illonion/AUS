@@ -3,6 +3,13 @@
 }
 #main { background-image: url("static/background.png") }
 
+/* --- Logo --- */
+#logo {
+    position: absolute; left: 963px; top: 25px;
+    transform: translateX(-50%);
+    width: 240px; height: 128px;
+}
+
 /* --- Bans ---*/
 /* Bans Text */
 .bansText {
