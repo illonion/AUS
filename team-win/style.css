@@ -1,0 +1,35 @@
+#main { background-image: url("static/background.png") }
+
+/* Player Details */
+#playerDetails {
+    position: absolute; left: 50%; top: 55%;
+    transform: translate(-50%, -50%);
+    width: 1400px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.playerDetails {
+    position: relative;
+    width: 700px;
+    height: 200px;
+}
+.playerProfilePicture {
+    position: absolute; left: 0; top: 0;
+    width: 150px; height: 150px;
+}
+.playerName {
+    position: absolute; left: 160px;
+    width: 540px;
+    font-weight: 800;
+    font-size: 80px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.playerRank {
+    position: absolute; left: 160px; top: 98px;
+    color: white;
+    font-weight: 600; font-size: 45px;
+}

@@ -288,7 +288,6 @@ socket.onmessage = async (event) => {
                     } else {
                         obsSetCurrentScene(team_win_scene_name)
                     }
-                    
                 } else if (currentIPCState == 2 || currentIPCState == 3) {
                     obsSetCurrentScene(gameplay_scene_name)
                 }
