@@ -281,21 +281,19 @@ socket.onmessage = async (event) => {
 
         // Results
         if (enableAutoAdvance) {
-            if (previousIPCState == 4 && currentIPCState == 1 && currentRedStars !== currentFirstTo && currentBlueStars !== currentFirstTo) {
-                obsGetCurrentScene((scene) => {
-                    obsSetCurrentScene(mappool_scene_name)
-                })
-            } else if (previousIPCState == 4 && currentIPCState == 1 && (currentRedStars === currentFirstTo || currentBlueStars !== currentFirstTo)) {
-                obsGetCurrentScene((scene) => {
-                    obsSetCurrentScene(team_win_scene_name)
-                })
-            } else if (currentIPCState == 2 || currentIPCState == 3) {
-                obsGetCurrentScene((scene) => {
+            obsGetCurrentScene((scene) => {
+                if (previousIPCState == 4 && currentIPCState == 1) {
+                    if (currentRedStars !== currentFirstTo && currentBlueStars !== currentFirstTo) {
+                        obsSetCurrentScene(mappool_scene_name)
+                    } else {
+                        obsSetCurrentScene(team_win_scene_name)
+                    }
+                    
+                } else if (currentIPCState == 2 || currentIPCState == 3) {
                     obsSetCurrentScene(gameplay_scene_name)
-                })
-            }
+                }
+            })
         }
-
     }
 }
 
