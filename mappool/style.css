@@ -339,3 +339,7 @@
 .activeScene {
     background-color: #3a8f29!important;
 }
+
+#autoAdvanceButton {
+    height: 100px;
+}
