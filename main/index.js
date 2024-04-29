@@ -97,7 +97,7 @@ socket.onmessage = async (event) => {
         redTeamStarsEl.innerHTML = ""
         blueTeamStarsEl.innerHTML = ""
 
-        // Red Stars
+        // Create stars
         function createStars(currentStars, index, teamStarFillColour) {
             let star = document.createElement("div")
             star.classList.add("teamStar")
@@ -108,6 +108,12 @@ socket.onmessage = async (event) => {
             redTeamStarsEl.append(createStars(currentRedStars, i, "teamStarFillRed"))
             blueTeamStarsEl.append(createStars(currentBlueStars, i, "teamStarFillBlue"))
         }
+
+        // Cookie for winner
+        if (currentRedStars === currentFirstTo) document.cookie = `winnerTeamName=${currentRedTeamName}; path=/`
+        else if (currentBlueStars === currentFirstTo) document.cookie = `winnerTeamName=${currentBlueTeamName}; path=/`
+        else document.cookie = `winnerTeamName=noOne; path=/`
+        
     }
 
     // Score visibility
