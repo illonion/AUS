@@ -318,8 +318,8 @@ const autopickToggleEl = document.getElementById("autopickToggle")
 let isAutopick = false
 function changeAutopick() {
     isAutopick = !isAutopick
-    if (isAutopick) autopickToggleEl.innerText = "OFF"
-    else autopickToggleEl.innerText = "ON"
+    if (isAutopick) autopickToggleEl.innerText = "ON"
+    else autopickToggleEl.innerText = "OFF"
 }
 
 // Map click event
