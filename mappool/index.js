@@ -74,6 +74,52 @@ fetch('http://127.0.0.1:24050/AUS/_data/beatmaps.json')
 // find map in mappool
 const findMapInMappool = beatmapID => allBeatmaps.find(map => map.beatmapID === beatmapID)
 
+// OBS SCENES
+const sceneCollection = document.getElementById("sceneCollection")
+let autoadvance_button = document.getElementById('autoAdvanceButton')
+let autoadvance_timer_container = document.getElementById('autoAdvanceTimer')
+let autoadvance_timer_label = document.getElementById('autoAdvanceTimerLabel')
+autoadvance_timer_container.style.opacity = '0'
+
+let enableAutoAdvance = false
+const gameplay_scene_name = "Gameplay"
+const mappool_scene_name = "Mappool"
+const team_win_scene_name = "Team Win"
+
+function switchAutoAdvance() {
+    enableAutoAdvance = !enableAutoAdvance
+    if (enableAutoAdvance) {
+        autoadvance_button.innerHTML = 'AUTO ADVANCE: ON'
+        autoadvance_button.style.backgroundColor = '#9ffcb3'
+    } else {
+        autoadvance_button.innerHTML = 'AUTO ADVANCE: OFF'
+        autoadvance_button.style.backgroundColor = '#fc9f9f'
+    }
+}
+
+const obsGetCurrentScene = window.obsstudio?.getCurrentScene ?? (() => {})
+const obsGetScenes = window.obsstudio?.getScenes ?? (() => {})
+const obsSetCurrentScene = window.obsstudio?.setCurrentScene ?? (() => {})
+
+obsGetScenes(scenes => {
+    for (const scene of scenes) {
+        let clone = document.getElementById("sceneButtonTemplate").content.cloneNode(true)
+        let buttonNode = clone.querySelector('div')
+        buttonNode.id = `scene__${scene}`
+        buttonNode.textContent = `GO TO: ${scene}`
+        buttonNode.onclick = function() { obsSetCurrentScene(scene); }
+        sceneCollection.appendChild(clone)
+    }
+
+    obsGetCurrentScene((scene) => { document.getElementById(`scene__${scene.name}`).classList.add("activeScene") })
+})
+
+window.addEventListener('obsSceneChanged', function(event) {
+    let activeButton = document.getElementById(`scene__${event.detail.name}`)
+    for (const scene of sceneCollection.children) { scene.classList.remove("activeScene") }
+    activeButton.classList.add("activeScene")
+})
+
 // Team Name
 const redTeamNameEl = document.getElementById("redTeamName")
 const blueTeamNameEl = document.getElementById("blueTeamName")
@@ -99,6 +145,10 @@ let mappoolMapFound = false
 // Chat
 const chatDisplayEl = document.getElementById("chatDisplay")
 let chatLength = 0
+
+// IPC State
+let previousIPCState
+let currentIPCState
 
 socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
@@ -223,6 +273,30 @@ socket.onmessage = async (event) => {
             behavior: 'smooth'
         })
     }
+
+    // IPC State
+    if (currentIPCState !== data.tourney.manager.ipcState) {
+        previousIPCState = currentIPCState
+        currentIPCState = data.tourney.manager.ipcState 
+
+        // Results
+        if (enableAutoAdvance) {
+            if (previousIPCState == 4 && currentIPCState == 1 && currentRedStars !== currentFirstTo && currentBlueStars !== currentFirstTo) {
+                obsGetCurrentScene((scene) => {
+                    obsSetCurrentScene(mappool_scene_name)
+                })
+            } else if (previousIPCState == 4 && currentIPCState == 1 && (currentRedStars === currentFirstTo || currentBlueStars !== currentFirstTo)) {
+                obsGetCurrentScene((scene) => {
+                    obsSetCurrentScene(team_win_scene_name)
+                })
+            } else if (currentIPCState == 2 || currentIPCState == 3) {
+                obsGetCurrentScene((scene) => {
+                    obsSetCurrentScene(gameplay_scene_name)
+                })
+            }
+        }
+
+    }
 }
 
 // Set text wrap class for title / song name and difficulty
@@ -327,6 +401,10 @@ function mapClickEvent() {
         setBan(blueBanContainersEl, this.id)
     } else if ((nextActionColour === "Red" || nextActionColour === "Blue") && nextActionAction === "Pick") {
         setPick(this.id)
+
+        setTimeout(() => {
+            if (enableAutoAdvance) { obsGetCurrentScene((scene) => obsSetCurrentScene(gameplay_scene_name)) }
+        }, 10000)
     }
 
     this.style.color = "gray"

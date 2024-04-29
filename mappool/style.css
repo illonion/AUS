@@ -218,7 +218,7 @@
 /* --- Side Bar --- */
 #sideBar {
     position: absolute; left: 1920px; top: 0;
-    width: 500px; height: 1080px;
+    width: 750px; height: 1080px;
     background-color: var(--sideBarColour);
 }
 /* Side Bar Column */
@@ -228,6 +228,7 @@
 }
 #sideBarColumn1 { left: 0; }
 #sideBarColumn2 { left: 250px; }
+#sideBarColumn3 { left: 500px; }
 /* Side Bar Divider */
 .sideBarDivider {
     position: absolute; top: 0;
@@ -235,6 +236,7 @@
     background-color: white;
 }
 #sideBarDivider1 { left: 249px; }
+#sideBarDivider2 { left: 499px; }
 /* Next Action */
 .sideBarSectionHeader, #nextActionText {
     color: white;
@@ -310,4 +312,30 @@
 /* Side Bar Apply Changes Button */
 #applyChanges {
     margin-left: 10%;
+}
+
+/* Side Bar Scenes */
+.controlLabel {
+    color: black;
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
+.sceneButton {
+    width: 360px;
+    height: 64px;
+    margin-bottom: 12px;
+    letter-spacing: normal;
+    font-family: sans-serif;
+    padding-left: 8px;
+    font-size: 20px;
+    display: flex;
+    text-align: left;
+    align-items: center;
+    justify-content: left;
+    color: var(--red);
+}
+
+.activeScene {
+    background-color: #3a8f29!important;
 }
