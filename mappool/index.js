@@ -128,7 +128,7 @@ let currentRedTeamName, currentBlueTeamName
 // Team stars
 const redTeamStarsEl = document.getElementById("redTeamStars")
 const blueTeamStarsEl = document.getElementById("blueTeamStars")
-let currentBestOf, currentRedStars, currentBlueStars
+let currentBestOf, currentFirstTo, currentRedStars, currentBlueStars
 
 // Now Playing
 const nowPlayingBackgroundEl = document.getElementById("nowPlayingBackground")
@@ -147,7 +147,6 @@ const chatDisplayEl = document.getElementById("chatDisplay")
 let chatLength = 0
 
 // IPC State
-let previousIPCState
 let currentIPCState
 
 socket.onmessage = async (event) => {
@@ -171,7 +170,7 @@ socket.onmessage = async (event) => {
 
         // Set details 
         currentBestOf = data.tourney.manager.bestOF
-        let currentFirstTo = Math.ceil(currentBestOf / 2)
+        currentFirstTo = Math.ceil(currentBestOf / 2)
         currentRedStars = data.tourney.manager.stars.left
         currentBlueStars = data.tourney.manager.stars.right
 
@@ -276,18 +275,20 @@ socket.onmessage = async (event) => {
 
     // IPC State
     if (currentIPCState !== data.tourney.manager.ipcState) {
-        previousIPCState = currentIPCState
         currentIPCState = data.tourney.manager.ipcState 
 
+        console.log(currentIPCState)
         // Results
         if (enableAutoAdvance) {
             obsGetCurrentScene((scene) => {
-                if (previousIPCState == 4 && currentIPCState == 1) {
-                    if (currentRedStars !== currentFirstTo && currentBlueStars !== currentFirstTo) {
-                        obsSetCurrentScene(mappool_scene_name)
-                    } else {
-                        obsSetCurrentScene(team_win_scene_name)
-                    }
+                if (currentIPCState === 4) {
+                    setTimeout(() => {
+                        if (currentRedStars !== currentFirstTo && currentBlueStars !== currentFirstTo) {
+                            obsSetCurrentScene(mappool_scene_name)
+                        } else {
+                            obsSetCurrentScene(team_win_scene_name)
+                        }
+                    }, 15000)
                 } else if (currentIPCState == 2 || currentIPCState == 3) {
                     obsSetCurrentScene(gameplay_scene_name)
                 }
