@@ -149,6 +149,10 @@ let chatLength = 0
 // IPC State
 let currentIPCState
 
+// Championship
+const championshipRedEl = document.getElementById("championshipRed")
+const championshipBlueEl = document.getElementById("championshipBlue")
+
 socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
     console.log(data)
@@ -157,10 +161,14 @@ socket.onmessage = async (event) => {
     if (currentRedTeamName !== data.tourney.manager.teamName.left) {
         currentRedTeamName = data.tourney.manager.teamName.left
         redTeamNameEl.innerText = currentRedTeamName
+        championshipRedEl.innerText = currentRedTeamName
+        championshipRedEl.setAttribute("onclick", `championshipTeam("${currentRedTeamName}")`)
     }
     if (currentBlueTeamName !== data.tourney.manager.teamName.right) {
         currentBlueTeamName = data.tourney.manager.teamName.right
         blueTeamNameEl.innerText = currentBlueTeamName
+        championshipBlueEl.innerText = currentBlueTeamName
+        championshipBlueEl.setAttribute("onclick", `championshipTeam("${currentBlueTeamName}")`)
     }
 
     // Stars
@@ -277,7 +285,6 @@ socket.onmessage = async (event) => {
     if (currentIPCState !== data.tourney.manager.ipcState) {
         currentIPCState = data.tourney.manager.ipcState 
 
-        console.log(currentIPCState)
         // Results
         if (enableAutoAdvance) {
             obsGetCurrentScene((scene) => {
@@ -754,3 +761,11 @@ function pickManagementRemovePick() {
         mapPickerSectionEl.children[currentTeamBanSelectPickTile].style.backgroundColor = `white`
     }
 }
+
+// Championship Contenders
+const championshipContenderEl = document.getElementById("championshipContender")
+function championshipTeam(team) {
+    championshipContenderEl.innerText = team
+    document.cookie = `championshipContender=${team}; path=/`
+}
+championshipTeam("NEITHER")

@@ -113,7 +113,6 @@ socket.onmessage = async (event) => {
         if (currentRedStars === currentFirstTo) document.cookie = `winnerTeamName=${currentRedTeamName}; path=/`
         else if (currentBlueStars === currentFirstTo) document.cookie = `winnerTeamName=${currentBlueTeamName}; path=/`
         else document.cookie = `winnerTeamName=noOne; path=/`
-        
     }
 
     // Score visibility

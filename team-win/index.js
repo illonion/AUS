@@ -22,6 +22,10 @@ const playerDetailsEl = document.getElementById("playerDetails")
 let previousTeamName
 let currentTeamName
 let teamSize = 2
+
+// Main body
+const mainEl = document.getElementById("main")
+
 setInterval(() => {
     // If no winner
     if (getCookie("winnerTeamName") == "noOne") {
@@ -48,6 +52,11 @@ setInterval(() => {
                 }
             }
         }
+
+        // Set championship winning background
+        const championshipContender = getCookie("championshipContender")
+        if (championshipContender === currentTeamName || championshipContender === "BOTH") mainEl.style.backgroundImage = `url("static/background_champ.png")`
+        else mainEl.style.backgroundImage = `url("static/background.png")`
     }
 }, 500)
 

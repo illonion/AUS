@@ -343,3 +343,9 @@
 #autoAdvanceButton {
     height: 100px;
 }
+
+#championshipContender {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 50px;
+}

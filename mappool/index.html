@@ -97,6 +97,17 @@
                         <button class="nextActionButton fullWidthButton" onclick="changeAutopick()">AUTOPICK: <span id="autopickToggle">OFF</span></button>
                     </div>
                 </section>
+                <section>
+                    <h1 class="sideBarSectionHeader">If either team wins the match, will they be winning the tournament?</h1>
+                    <h1 class="sideBarSectionHeader" id="championshipContender">NEITHER</h1>
+                    <div id="nextActionButtons">
+                        <button class="nextActionButton fullWidthButton" onclick="championshipTeam('NEITHER')" id="championshipNeither">NEITHER</button>
+                        <button class="nextActionButton fullWidthButton" onclick="championshipTeam('')" id="championshipRed"></button>
+                        <button class="nextActionButton fullWidthButton" onclick="championshipTeam('')" id="championshipBlue"></button>
+                        <button class="nextActionButton fullWidthButton" onclick="championshipTeam('BOTH')" id="championshipBoth">BOTH</button>
+                    </div>
+                    
+                </section>
             </section>
             <div class="sideBarDivider" id="sideBarDivider1"></div>
             <section class="sideBarColumn" id="sideBarColumn2">
